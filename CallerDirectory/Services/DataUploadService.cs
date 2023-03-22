@@ -57,8 +57,6 @@ namespace CallerDirectory.Services
                     continue;
                 }
 
-                // TODO: add validation on the data (such as ensure string length limits, required columns exist, etc)
-
                 yield return line.Split(',', StringSplitOptions.TrimEntries);
             }
         }

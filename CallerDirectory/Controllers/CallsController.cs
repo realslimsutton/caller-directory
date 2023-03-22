@@ -5,16 +5,19 @@ namespace CallerDirectory.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DataImportController : Controller
+    public class CallsController : Controller
     {
+        private readonly IConfiguration configuration;
+
         private readonly IDataUploadService _dataUploadService;
 
-        public DataImportController(IDataUploadService dataUploadService)
+        public CallsController(IConfiguration configuration, IDataUploadService dataUploadService)
         {
+            this.configuration = configuration;
             this._dataUploadService = dataUploadService;
         }
 
-        [HttpPost]
+        [HttpPost("/import")]
         [DisableRequestSizeLimit]
         [RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         public async Task<IActionResult> Import(IFormFile file)
