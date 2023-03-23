@@ -4,12 +4,12 @@
     {
         public IEnumerable<T> Data { get; private set; }
 
-        public PaginatedRequest Pagination { get; private set; }
+        public Request Request { get; private set; }
 
-        public PaginatedResponse(IEnumerable<T> data, PaginatedRequest pagination)
+        public PaginatedResponse(IEnumerable<T> data, Request request)
         {
             this.Data = data;
-            this.Pagination = pagination;
+            this.Request = request;
         }
     }
 }

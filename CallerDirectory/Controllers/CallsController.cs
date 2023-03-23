@@ -39,13 +39,13 @@ namespace CallerDirectory.Controllers
         }
 
         [HttpGet("/")]
-        public async Task<IActionResult> GetRecordsAsync([FromQuery] PaginatedRequest pagination)
+        public async Task<IActionResult> GetRecordsAsync([FromQuery] Request request)
         {
             try
             {
-                IEnumerable<CallRecord> records = await this._callRecordsService.GetRecordsAsync(pagination);
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetRecordsAsync(request);
 
-                return Json(new PaginatedResponse<CallRecord>(records, pagination));
+                return Json(new PaginatedResponse<CallRecord>(records, request));
             }
             catch (Exception)
             {
@@ -54,13 +54,13 @@ namespace CallerDirectory.Controllers
         }
 
         [HttpGet("/caller/unknown")]
-        public async Task<IActionResult> GetUnknownCallerRecords([FromQuery] PaginatedRequest pagination)
+        public async Task<IActionResult> GetUnknownCallerRecords([FromQuery] Request request)
         {
             try
             {
-                IEnumerable<CallRecord> records = await this._callRecordsService.GetCallerRecordsAsync(pagination);
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetCallerRecordsAsync(request);
 
-                return Json(new PaginatedResponse<CallRecord>(records, pagination));
+                return Json(new PaginatedResponse<CallRecord>(records, request));
             }
             catch (Exception)
             {
@@ -69,13 +69,13 @@ namespace CallerDirectory.Controllers
         }
 
         [HttpGet("/caller/{callerId?}")]
-        public async Task<IActionResult> GetCallerRecords([FromQuery] PaginatedRequest pagination, [FromRoute] long? callerId = null)
+        public async Task<IActionResult> GetCallerRecords([FromQuery] Request request, [FromRoute] long? callerId = null)
         {
             try
             {
-                IEnumerable<CallRecord> records = await this._callRecordsService.GetCallerRecordsAsync(pagination, callerId);
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetCallerRecordsAsync(request, callerId);
 
-                return Json(new PaginatedResponse<CallRecord>(records, pagination));
+                return Json(new PaginatedResponse<CallRecord>(records, request));
             }
             catch (Exception)
             {
@@ -84,13 +84,13 @@ namespace CallerDirectory.Controllers
         }
 
         [HttpGet("/recipient/{recipientId}")]
-        public async Task<IActionResult> GetCallerRecords([FromQuery] PaginatedRequest pagination, [FromRoute] long recipientId)
+        public async Task<IActionResult> GetCallerRecords([FromQuery] Request request, [FromRoute] long recipientId)
         {
             try
             {
-                IEnumerable<CallRecord> records = await this._callRecordsService.GetRecipientRecordsAsync(pagination, recipientId);
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetRecipientRecordsAsync(request, recipientId);
 
-                return Json(new PaginatedResponse<CallRecord>(records, pagination));
+                return Json(new PaginatedResponse<CallRecord>(records, request));
             }
             catch (Exception)
             {
@@ -99,13 +99,13 @@ namespace CallerDirectory.Controllers
         }
 
         [HttpGet("/costs")]
-        public async Task<IActionResult> GetCallersCostAsync([FromQuery] PaginatedRequest pagination)
+        public async Task<IActionResult> GetCallersCostAsync([FromQuery] Request request)
         {
             try
             {
-                IEnumerable<object> records = await this._callRecordsService.GetCallersCostAsync(pagination);
+                IEnumerable<object> records = await this._callRecordsService.GetCallersCostAsync(request);
 
-                return Json(new PaginatedResponse<object>(records, pagination));
+                return Json(new PaginatedResponse<object>(records, request));
             }
             catch (Exception)
             {

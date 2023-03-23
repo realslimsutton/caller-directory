@@ -1,7 +1,9 @@
 ﻿using CallerDirectory.DataAccess;
+using CallerDirectory.Extensions;
 using CallerDirectory.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CallerDirectory.Services
 {
@@ -21,28 +23,28 @@ namespace CallerDirectory.Services
             return await context.CallRecords.FirstOrDefaultAsync(c => c.Reference == reference);
         }
 
-        public async Task<IEnumerable<CallRecord>> GetRecordsAsync(PaginatedRequest pagination)
+        public async Task<IEnumerable<CallRecord>> GetRecordsAsync(Request request)
         {
             using CallingContext context = this.CreateContext();
 
-            return await this.CreatePaginatedQuery(context.CallRecords.AsQueryable(), pagination).ToListAsync();
+            return await this.ApplyRequestFiltersToQuery(context.CallRecords.AsQueryable(), request).ToListAsync();
         }
 
-        public async Task<IEnumerable<CallRecord>> GetCallerRecordsAsync(PaginatedRequest pagination, long? callerId = null)
+        public async Task<IEnumerable<CallRecord>> GetCallerRecordsAsync(Request request, long? callerId = null)
         {
             using CallingContext context = this.CreateContext();
 
-            return await this.CreatePaginatedQuery(context.CallRecords.Where(c => c.Caller == callerId), pagination).ToListAsync();
+            return await this.ApplyRequestFiltersToQuery(context.CallRecords.Where(c => c.Caller == callerId), request).ToListAsync();
         }
 
-        public async Task<IEnumerable<CallRecord>> GetRecipientRecordsAsync(PaginatedRequest pagination, long recipientId)
+        public async Task<IEnumerable<CallRecord>> GetRecipientRecordsAsync(Request request, long recipientId)
         {
             using CallingContext context = this.CreateContext();
 
-            return await this.CreatePaginatedQuery(context.CallRecords.Where(c => c.Recipient == recipientId), pagination).ToListAsync();
+            return await this.ApplyRequestFiltersToQuery(context.CallRecords.Where(c => c.Recipient == recipientId), request).ToListAsync();
         }
 
-        public async Task<IEnumerable<object>> GetCallersCostAsync(PaginatedRequest pagination)
+        public async Task<IEnumerable<object>> GetCallersCostAsync(Request request)
         {
             using CallingContext context = this.CreateContext();
 
@@ -65,7 +67,7 @@ namespace CallerDirectory.Services
                 })
                 .ToQueryString();
 
-            return await this.CreatePaginatedQuery(query, pagination).ToListAsync();
+            return await this.ApplyRequestFiltersToQuery(query, request).ToListAsync();
         }
 
         public async Task<IEnumerable<object>> GetHourlyCostsAsync()
@@ -89,37 +91,11 @@ namespace CallerDirectory.Services
             return new CallingContext(this._configuration);
         }
 
-        private IQueryable<T> CreatePaginatedQuery<T>(IQueryable<T> query, PaginatedRequest pagination)
+        private IQueryable<T> ApplyRequestFiltersToQuery<T>(IQueryable<T> query, Request request)
         {
-            this.ApplyFilters(ref query, pagination);
-            this.ApplySorting(ref query, pagination);
-
-            query = query.Skip(pagination.GetSkip()).Take(pagination.PerPage);
-
-            return query;
-        }
-
-        private void ApplySorting<T>(ref IQueryable<T> query, PaginatedRequest pagination)
-        {
-            if (string.IsNullOrWhiteSpace(pagination.SortColumn))
-            {
-                return;
-            }
-
-            query = query.OrderBy($"{pagination.SortColumn} {pagination.SortDirection}");
-        }
-
-        private void ApplyFilters<T>(ref IQueryable<T> query, PaginatedRequest pagination)
-        {
-            if (pagination.StartDateTime != null)
-            {
-                query = query.Where("StartDateTime >= @0", pagination.StartDateTime);
-            }
-
-            if (pagination.EndDateTime != null)
-            {
-                query = query.Where("StartDateTime <= @0", pagination.EndDateTime);
-            }
+            return query.ApplyRequestFilters(request)
+                .ApplyRequestSorting(request)
+                .ApplyRequestPagination(request);
         }
     }
 }

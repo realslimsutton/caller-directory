@@ -1,6 +1,6 @@
 ﻿namespace CallerDirectory.Models
 {
-    public class PaginatedRequest
+    public class Request
     {
         public int Page { get; set; } = 1;
 
