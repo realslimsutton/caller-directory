@@ -101,6 +101,21 @@ namespace CallerDirectory.Controllers
             }
         }
 
+        [HttpGet("/recipient/{recipientId}")]
+        public async Task<IActionResult> GetCallerRecords([FromQuery] PaginatedRequest pagination, [FromRoute] long recipientId)
+        {
+            try
+            {
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetRecipientRecordsAsync(pagination, recipientId);
+
+                return Json(new PaginatedResponse<CallRecord>(records, pagination));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost("/import")]
         [DisableRequestSizeLimit]
         [RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]

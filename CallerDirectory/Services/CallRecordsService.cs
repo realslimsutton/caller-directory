@@ -34,6 +34,13 @@ namespace CallerDirectory.Services
             return await this.CreatePaginatedQuery(context.CallRecords.Where(c => c.Caller == callerId), pagination).ToListAsync();
         }
 
+        public async Task<IEnumerable<CallRecord>> GetRecipientRecordsAsync(PaginatedRequest pagination, long recipientId)
+        {
+            using CallingContext context = this.CreateContext();
+
+            return await this.CreatePaginatedQuery(context.CallRecords.Where(c => c.Recipient == recipientId), pagination).ToListAsync();
+        }
+
         public async Task<IEnumerable<object>> GetHourlyCostsAsync()
         {
             using CallingContext context = this.CreateContext();
