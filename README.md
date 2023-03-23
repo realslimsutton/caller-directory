@@ -29,3 +29,4 @@
 	- Support uploading files using streaming. This would allow web requests to upload large files in chunks instead of all at once.
     - An API should really be versioned. As this is a very basic API, I've decided to put this on the backlog for when I would've had more time.
     - Currently the background service worker runs in what is essentially a while true loop. I'd be much happier if there was some blocking code to free up the CPU a bit more when the queue is empty (I'm thinking something along the lines of AutoResetEvent).
+  - Since this data is updated at predicatable intervals (probably daily according to the brief) it's a perfect example of data that should be cached using something such as Redis.
