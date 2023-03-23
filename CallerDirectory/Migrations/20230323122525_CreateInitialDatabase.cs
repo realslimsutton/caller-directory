@@ -19,13 +19,13 @@ namespace CallerDirectory.Migrations
                 name: "CallRecords",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Caller = table.Column<long>(type: "bigint", nullable: true),
                     Recipient = table.Column<long>(type: "bigint", nullable: false),
                     StartDateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndDateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Cost = table.Column<float>(type: "float", nullable: false),
+                    Cost = table.Column<int>(type: "int", nullable: false),
                     Reference = table.Column<string>(type: "VARCHAR(33)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Currency = table.Column<string>(type: "VARCHAR(3)", nullable: false)

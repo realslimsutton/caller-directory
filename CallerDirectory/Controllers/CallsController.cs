@@ -27,12 +27,27 @@ namespace CallerDirectory.Controllers
             {
                 CallRecord? record = await this._callRecordsService.GetRecordAsync(reference);
 
-                if (record == null)
+                if (record != null)
                 {
-                    return Json(record);
+                    return Json(new Response<CallRecord>(record));
                 }
 
                 return NotFound();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/HourlyCosts")]
+        public async Task<IActionResult> GetHourlyCosts()
+        {
+            try
+            {
+                IEnumerable<object> records = await this._callRecordsService.GetHourlyCostsAsync();
+
+                return Json(new Response<IEnumerable<object>>(records));
             }
             catch (Exception)
             {

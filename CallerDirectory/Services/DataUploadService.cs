@@ -34,7 +34,7 @@ namespace CallerDirectory.Services
                 Recipient = long.Parse(fields[1]),
                 StartDateTime = endDateTime.AddSeconds(-1 * int.Parse(fields[4])),
                 EndDateTime = endDateTime,
-                Cost = float.Parse(fields[5]) * COST_MULTIPLIER,
+                Cost = (int)(float.Parse(fields[5]) * COST_MULTIPLIER),
                 Reference = fields[6],
                 Currency = fields[7]
             });

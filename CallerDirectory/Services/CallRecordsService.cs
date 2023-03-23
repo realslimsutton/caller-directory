@@ -27,6 +27,22 @@ namespace CallerDirectory.Services
             return await this.CreatePaginatedQuery(context, pagination).ToListAsync();
         }
 
+        public async Task<IEnumerable<object>> GetHourlyCostsAsync()
+        {
+            using CallingContext context = this.CreateContext();
+
+            return await context.CallRecords
+                .GroupBy(c => c.StartDateTime.Hour)
+                .Select(c => new
+                {
+                    c.Key,
+                    AverageCost = c.Average(a => a.Cost),
+                    TotalCost = c.Sum(a => a.Cost)
+                })
+                .OrderBy(c => c.Key)
+                .ToListAsync();
+        }
+
         private CallingContext CreateContext()
         {
             return new CallingContext(this._configuration);

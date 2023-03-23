@@ -10,7 +10,7 @@ namespace CallerDirectory.Models
     [Index(nameof(Reference), IsUnique = true)]
     public class CallRecord
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public long? Caller { get; set; }
 
@@ -20,7 +20,7 @@ namespace CallerDirectory.Models
 
         public DateTime EndDateTime { get; set; }
 
-        public float Cost { get; set; }
+        public int Cost { get; set; }
 
         [Column(TypeName = "VARCHAR(33)")]
         public string Reference { get; set; }

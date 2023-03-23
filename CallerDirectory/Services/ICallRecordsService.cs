@@ -7,5 +7,7 @@ namespace CallerDirectory.Services
         public Task<CallRecord?> GetRecordAsync(string reference);
 
         public Task<IEnumerable<CallRecord>> GetRecordsAsync(PaginatedRequest pagination);
+
+        public Task<IEnumerable<object>> GetHourlyCostsAsync();
     }
 }

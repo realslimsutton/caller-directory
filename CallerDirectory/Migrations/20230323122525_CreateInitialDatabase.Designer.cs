@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CallerDirectory.Migrations
 {
     [DbContext(typeof(CallingContext))]
-    [Migration("20230322173932_CreateInitialDatabase")]
+    [Migration("20230323122525_CreateInitialDatabase")]
     partial class CreateInitialDatabase
     {
         /// <inheritdoc />
@@ -24,15 +24,15 @@ namespace CallerDirectory.Migrations
 
             modelBuilder.Entity("CallerDirectory.Models.CallRecord", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("Caller")
                         .HasColumnType("bigint");
 
-                    b.Property<float>("Cost")
-                        .HasColumnType("float");
+                    b.Property<int>("Cost")
+                        .HasColumnType("int");
 
                     b.Property<string>("Currency")
                         .IsRequired()
