@@ -13,17 +13,51 @@ namespace CallerDirectory.Services
             this._configuration = configuration;
         }
 
-        public async Task<CallRecord?> Get(string reference)
+        public async Task<CallRecord?> GetRecordAsync(string reference)
         {
-            using (CallingContext context = this.CreateContext())
-            {
-                return await context.CallRecords.FirstOrDefaultAsync(c => c.Reference == reference);
-            }
+            using CallingContext context = this.CreateContext();
+
+            return await context.CallRecords.FirstOrDefaultAsync(c => c.Reference == reference);
+        }
+
+        public async Task<IEnumerable<CallRecord>> GetRecordsAsync(PaginatedRequest pagination)
+        {
+            using CallingContext context = this.CreateContext();
+
+            return await this.CreatePaginatedQuery(context, pagination).ToListAsync();
         }
 
         private CallingContext CreateContext()
         {
             return new CallingContext(this._configuration);
+        }
+
+        private IQueryable<CallRecord> CreatePaginatedQuery(CallingContext context, PaginatedRequest pagination)
+        {
+            IQueryable<CallRecord> query = context.CallRecords.AsQueryable();
+
+            this.ApplySorting(ref query, pagination);
+
+            query = query.Skip(pagination.GetSkip()).Take(pagination.PerPage);
+
+            return query;
+        }
+
+        private void ApplySorting(ref IQueryable<CallRecord> query, PaginatedRequest pagination)
+        {
+            if (string.IsNullOrWhiteSpace(pagination.SortColumn))
+            {
+                return;
+            }
+
+            if (pagination.SortDirection.ToUpper() == "DESC")
+            {
+                query = query.OrderByDescending(c => EF.Property<object>(c, pagination.SortColumn));
+            }
+            else
+            {
+                query = query.OrderBy(c => EF.Property<object>(c, pagination.SortColumn));
+            }
         }
     }
 }

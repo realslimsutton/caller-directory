@@ -16,7 +16,7 @@ namespace CallerDirectory.Services
             this._queue = queue;
         }
 
-        public async Task Import(Stream stream)
+        public async Task ImportAsync(Stream stream)
         {
             foreach (string[] fields in GetFields(stream))
             {

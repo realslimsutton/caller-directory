@@ -2,6 +2,6 @@
 {
     public interface IDataUploadService
     {
-        public Task Import(Stream stream);
+        public Task ImportAsync(Stream stream);
     }
 }

@@ -29,15 +29,15 @@ namespace CallerDirectory.Worker
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    await this.ProcessQueue(cancellationToken);
+                    await this.ProcessQueueAsync(cancellationToken);
                 }
 
-                await this.ProcessQueue(cancellationToken);
-                await this.UpdateDatabase(cancellationToken);
+                await this.ProcessQueueAsync(cancellationToken);
+                await this.UpdateDatabaseAsync(cancellationToken);
             }, TaskCreationOptions.LongRunning);
         }
 
-        private async Task ProcessQueue(CancellationToken cancellationToken)
+        private async Task ProcessQueueAsync(CancellationToken cancellationToken)
         {
             while (!this._queue.IsEmpty)
             {
@@ -50,12 +50,12 @@ namespace CallerDirectory.Worker
 
                 if (this._insertBuffer.Count == this._insertBuffer.Capacity)
                 {
-                    await this.UpdateDatabase(cancellationToken);
+                    await this.UpdateDatabaseAsync(cancellationToken);
                 }
             }
         }
 
-        private async Task UpdateDatabase(CancellationToken cancellationToken)
+        private async Task UpdateDatabaseAsync(CancellationToken cancellationToken)
         {
             try
             {

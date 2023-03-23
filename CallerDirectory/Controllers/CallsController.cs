@@ -21,28 +21,50 @@ namespace CallerDirectory.Controllers
         }
 
         [HttpGet("/{reference}")]
-        public async Task<IActionResult> Get(string reference)
+        public async Task<IActionResult> GetRecordAsync(string reference)
         {
-            CallRecord? record = await this._callRecordsService.Get(reference);
-
-            if(record == null)
+            try
             {
-                return Json(record);
-            }
+                CallRecord? record = await this._callRecordsService.GetRecordAsync(reference);
 
-            return NotFound();
+                if (record == null)
+                {
+                    return Json(record);
+                }
+
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/")]
+        public async Task<IActionResult> GetRecordsAsync([FromQuery]PaginatedRequest pagination)
+        {
+            try
+            {
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetRecordsAsync(pagination);
+
+                return Json(new PaginatedResponse<CallRecord>(records, pagination));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost("/import")]
         [DisableRequestSizeLimit]
         [RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
-        public async Task<IActionResult> Import(IFormFile file)
+        public async Task<IActionResult> ImportAsync(IFormFile file)
         {
             Stream stream = file.OpenReadStream();
 
             try
             {
-                await this._dataUploadService.Import(stream);
+                await this._dataUploadService.ImportAsync(stream);
             }
             catch
             {

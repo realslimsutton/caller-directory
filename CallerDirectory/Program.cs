@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IDataUploadQueue, DataUploadQueue>();
 builder.Services.AddSingleton<IDataUploadService, DataUploadService>();
+builder.Services.AddSingleton<ICallRecordsService, CallRecordsService>();
 
 builder.Services.AddHostedService<DataUploadWorker>();
 

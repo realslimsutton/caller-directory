@@ -4,6 +4,8 @@ namespace CallerDirectory.Services
 {
     public interface ICallRecordsService
     {
-        public Task<CallRecord?> Get(string reference);
+        public Task<CallRecord?> GetRecordAsync(string reference);
+
+        public Task<IEnumerable<CallRecord>> GetRecordsAsync(PaginatedRequest pagination);
     }
 }
