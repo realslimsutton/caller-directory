@@ -59,14 +59,14 @@ namespace CallerDirectory.Worker
         {
             try
             {
-                using(CallingContext context = new(this._configuration))
+                using (CallingContext context = new(this._configuration))
                 {
                     await context.CallRecords.UpsertRange(this._insertBuffer).On(c => c.Reference).RunAsync(cancellationToken);
                 }
 
                 this._insertBuffer.Clear();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this._logger.LogError(ex, "Failed to import data uploads");
             }

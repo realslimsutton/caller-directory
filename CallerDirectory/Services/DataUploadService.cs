@@ -1,6 +1,5 @@
 ﻿using CallerDirectory.Models;
 using CallerDirectory.Worker;
-using System.Globalization;
 
 namespace CallerDirectory.Services
 {
@@ -44,7 +43,7 @@ namespace CallerDirectory.Services
         {
             bool firstLine = true;
 
-            using StreamReader reader = new (stream);
+            using StreamReader reader = new(stream);
 
             while (!reader.EndOfStream)
             {

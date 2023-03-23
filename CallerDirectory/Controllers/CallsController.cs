@@ -1,14 +1,11 @@
-﻿using CallerDirectory.DataAccess;
-using CallerDirectory.Models;
+﻿using CallerDirectory.Models;
 using CallerDirectory.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 
 namespace CallerDirectory.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/calls")]
     public class CallsController : Controller
     {
         private readonly ICallRecordsService _callRecordsService;
@@ -41,7 +38,7 @@ namespace CallerDirectory.Controllers
             }
         }
 
-        [HttpGet("/HourlyCosts")]
+        [HttpGet("/hourly-costs")]
         public async Task<IActionResult> GetHourlyCosts()
         {
             try
@@ -57,7 +54,7 @@ namespace CallerDirectory.Controllers
         }
 
         [HttpGet("/")]
-        public async Task<IActionResult> GetRecordsAsync([FromQuery]PaginatedRequest pagination)
+        public async Task<IActionResult> GetRecordsAsync([FromQuery] PaginatedRequest pagination)
         {
             try
             {
@@ -87,7 +84,7 @@ namespace CallerDirectory.Controllers
         }
 
         [HttpGet("/caller/{callerId?}")]
-        public async Task<IActionResult> GetCallerRecords([FromQuery] PaginatedRequest pagination, [FromRoute]long? callerId = null)
+        public async Task<IActionResult> GetCallerRecords([FromQuery] PaginatedRequest pagination, [FromRoute] long? callerId = null)
         {
             try
             {
@@ -115,6 +112,8 @@ namespace CallerDirectory.Controllers
                 return BadRequest();
             }
         }
+
+
 
         [HttpPost("/import")]
         [DisableRequestSizeLimit]

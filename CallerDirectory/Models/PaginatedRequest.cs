@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace CallerDirectory.Models
+﻿namespace CallerDirectory.Models
 {
     public class PaginatedRequest
     {
@@ -14,12 +12,12 @@ namespace CallerDirectory.Models
 
         public int GetSkip()
         {
-            if(this.Page < 1)
+            if (this.Page < 1)
             {
                 this.Page = 1;
             }
 
-            if(this.PerPage < 1)
+            if (this.PerPage < 1)
             {
                 this.PerPage = 10;
             }
