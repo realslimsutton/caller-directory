@@ -24,7 +24,14 @@ namespace CallerDirectory.Services
         {
             using CallingContext context = this.CreateContext();
 
-            return await this.CreatePaginatedQuery(context, pagination).ToListAsync();
+            return await this.CreatePaginatedQuery(context.CallRecords.AsQueryable(), pagination).ToListAsync();
+        }
+
+        public async Task<IEnumerable<CallRecord>> GetCallerRecordsAsync(PaginatedRequest pagination, long? callerId = null)
+        {
+            using CallingContext context = this.CreateContext();
+
+            return await this.CreatePaginatedQuery(context.CallRecords.Where(c => c.Caller == callerId), pagination).ToListAsync();
         }
 
         public async Task<IEnumerable<object>> GetHourlyCostsAsync()
@@ -48,10 +55,8 @@ namespace CallerDirectory.Services
             return new CallingContext(this._configuration);
         }
 
-        private IQueryable<CallRecord> CreatePaginatedQuery(CallingContext context, PaginatedRequest pagination)
+        private IQueryable<CallRecord> CreatePaginatedQuery(IQueryable<CallRecord> query, PaginatedRequest pagination)
         {
-            IQueryable<CallRecord> query = context.CallRecords.AsQueryable();
-
             this.ApplySorting(ref query, pagination);
 
             query = query.Skip(pagination.GetSkip()).Take(pagination.PerPage);

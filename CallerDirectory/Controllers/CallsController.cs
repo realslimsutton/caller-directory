@@ -3,6 +3,7 @@ using CallerDirectory.Models;
 using CallerDirectory.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace CallerDirectory.Controllers
 {
@@ -61,6 +62,36 @@ namespace CallerDirectory.Controllers
             try
             {
                 IEnumerable<CallRecord> records = await this._callRecordsService.GetRecordsAsync(pagination);
+
+                return Json(new PaginatedResponse<CallRecord>(records, pagination));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/caller/unknown")]
+        public async Task<IActionResult> GetUnknownCallerRecords([FromQuery] PaginatedRequest pagination)
+        {
+            try
+            {
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetCallerRecordsAsync(pagination);
+
+                return Json(new PaginatedResponse<CallRecord>(records, pagination));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/caller/{callerId?}")]
+        public async Task<IActionResult> GetCallerRecords([FromQuery] PaginatedRequest pagination, [FromRoute]long? callerId = null)
+        {
+            try
+            {
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetCallerRecordsAsync(pagination, callerId);
 
                 return Json(new PaginatedResponse<CallRecord>(records, pagination));
             }
