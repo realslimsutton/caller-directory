@@ -53,21 +53,6 @@ namespace CallerDirectory.Controllers
             }
         }
 
-        [HttpGet("/caller/unknown")]
-        public async Task<IActionResult> GetUnknownCallerRecords([FromQuery] Request request)
-        {
-            try
-            {
-                IEnumerable<CallRecord> records = await this._callRecordsService.GetCallerRecordsAsync(request);
-
-                return Json(new PaginatedResponse<CallRecord>(records, request));
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-
         [HttpGet("/caller/{callerId?}")]
         public async Task<IActionResult> GetCallerRecords([FromQuery] Request request, [FromRoute] long? callerId = null)
         {
@@ -83,8 +68,23 @@ namespace CallerDirectory.Controllers
             }
         }
 
+        [HttpGet("/caller/unknown")]
+        public async Task<IActionResult> GetUnknownCallerRecords([FromQuery] Request request)
+        {
+            try
+            {
+                IEnumerable<CallRecord> records = await this._callRecordsService.GetCallerRecordsAsync(request);
+
+                return Json(new PaginatedResponse<CallRecord>(records, request));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("/recipient/{recipientId}")]
-        public async Task<IActionResult> GetCallerRecords([FromQuery] Request request, [FromRoute] long recipientId)
+        public async Task<IActionResult> GetRecipientRecords([FromQuery] Request request, [FromRoute] long recipientId)
         {
             try
             {
