@@ -91,6 +91,7 @@ namespace CallerDirectory.Services
 
         private IQueryable<T> CreatePaginatedQuery<T>(IQueryable<T> query, PaginatedRequest pagination)
         {
+            this.ApplyFilters(ref query, pagination);
             this.ApplySorting(ref query, pagination);
 
             query = query.Skip(pagination.GetSkip()).Take(pagination.PerPage);
@@ -106,6 +107,19 @@ namespace CallerDirectory.Services
             }
 
             query = query.OrderBy($"{pagination.SortColumn} {pagination.SortDirection}");
+        }
+
+        private void ApplyFilters<T>(ref IQueryable<T> query, PaginatedRequest pagination)
+        {
+            if (pagination.StartDateTime != null)
+            {
+                query = query.Where("StartDateTime >= @0", pagination.StartDateTime);
+            }
+
+            if (pagination.EndDateTime != null)
+            {
+                query = query.Where("StartDateTime <= @0", pagination.EndDateTime);
+            }
         }
     }
 }

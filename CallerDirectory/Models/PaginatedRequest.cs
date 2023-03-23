@@ -10,6 +10,10 @@
 
         public string SortDirection { get; set; } = "asc";
 
+        public DateTime? StartDateTime { get; set; }
+
+        public DateTime? EndDateTime { get; set; }
+
         public int GetSkip()
         {
             if (this.Page < 1)
