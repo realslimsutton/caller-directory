@@ -3,7 +3,6 @@ using CallerDirectory.Extensions;
 using CallerDirectory.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CallerDirectory.Services
 {
