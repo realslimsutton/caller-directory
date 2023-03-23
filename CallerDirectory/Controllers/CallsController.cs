@@ -1,5 +1,8 @@
-﻿using CallerDirectory.Services;
+﻿using CallerDirectory.DataAccess;
+using CallerDirectory.Models;
+using CallerDirectory.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CallerDirectory.Controllers
 {
@@ -7,14 +10,27 @@ namespace CallerDirectory.Controllers
     [Route("[controller]")]
     public class CallsController : Controller
     {
-        private readonly IConfiguration configuration;
+        private readonly ICallRecordsService _callRecordsService;
 
         private readonly IDataUploadService _dataUploadService;
 
-        public CallsController(IConfiguration configuration, IDataUploadService dataUploadService)
+        public CallsController(ICallRecordsService callRecordsService, IDataUploadService dataUploadService)
         {
-            this.configuration = configuration;
+            this._callRecordsService = callRecordsService;
             this._dataUploadService = dataUploadService;
+        }
+
+        [HttpGet("/{reference}")]
+        public async Task<IActionResult> Get(string reference)
+        {
+            CallRecord? record = await this._callRecordsService.Get(reference);
+
+            if(record == null)
+            {
+                return Json(record);
+            }
+
+            return NotFound();
         }
 
         [HttpPost("/import")]
