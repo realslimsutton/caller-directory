@@ -38,21 +38,6 @@ namespace CallerDirectory.Controllers
             }
         }
 
-        [HttpGet("/hourly-costs")]
-        public async Task<IActionResult> GetHourlyCosts()
-        {
-            try
-            {
-                IEnumerable<object> records = await this._callRecordsService.GetHourlyCostsAsync();
-
-                return Json(new Response<IEnumerable<object>>(records));
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-
         [HttpGet("/")]
         public async Task<IActionResult> GetRecordsAsync([FromQuery] PaginatedRequest pagination)
         {
@@ -113,7 +98,35 @@ namespace CallerDirectory.Controllers
             }
         }
 
+        [HttpGet("/costs")]
+        public async Task<IActionResult> GetCallersCostAsync([FromQuery] PaginatedRequest pagination)
+        {
+            try
+            {
+                IEnumerable<object> records = await this._callRecordsService.GetCallersCostAsync(pagination);
 
+                return Json(new PaginatedResponse<object>(records, pagination));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/hourly-costs")]
+        public async Task<IActionResult> GetHourlyCosts()
+        {
+            try
+            {
+                IEnumerable<object> records = await this._callRecordsService.GetHourlyCostsAsync();
+
+                return Json(new Response<IEnumerable<object>>(records));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpPost("/import")]
         [DisableRequestSizeLimit]

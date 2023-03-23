@@ -1,6 +1,7 @@
 ﻿using CallerDirectory.DataAccess;
 using CallerDirectory.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace CallerDirectory.Services
 {
@@ -41,6 +42,32 @@ namespace CallerDirectory.Services
             return await this.CreatePaginatedQuery(context.CallRecords.Where(c => c.Recipient == recipientId), pagination).ToListAsync();
         }
 
+        public async Task<IEnumerable<object>> GetCallersCostAsync(PaginatedRequest pagination)
+        {
+            using CallingContext context = this.CreateContext();
+
+            IQueryable<object> query = context.CallRecords
+                .GroupBy(c => c.Caller)
+                .Select(c => new
+                {
+                    c.Key,
+                    AverageCost = c.Average(a => a.Cost),
+                    TotalCost = c.Sum(a => a.Cost)
+                });
+
+            var te = context.CallRecords
+                .GroupBy(c => c.Caller)
+                .Select(c => new
+                {
+                    c.Key,
+                    AverageCost = c.Average(a => a.Cost),
+                    TotalCost = c.Sum(a => a.Cost)
+                })
+                .ToQueryString();
+
+            return await this.CreatePaginatedQuery(query, pagination).ToListAsync();
+        }
+
         public async Task<IEnumerable<object>> GetHourlyCostsAsync()
         {
             using CallingContext context = this.CreateContext();
@@ -62,7 +89,7 @@ namespace CallerDirectory.Services
             return new CallingContext(this._configuration);
         }
 
-        private IQueryable<CallRecord> CreatePaginatedQuery(IQueryable<CallRecord> query, PaginatedRequest pagination)
+        private IQueryable<T> CreatePaginatedQuery<T>(IQueryable<T> query, PaginatedRequest pagination)
         {
             this.ApplySorting(ref query, pagination);
 
@@ -71,21 +98,14 @@ namespace CallerDirectory.Services
             return query;
         }
 
-        private void ApplySorting(ref IQueryable<CallRecord> query, PaginatedRequest pagination)
+        private void ApplySorting<T>(ref IQueryable<T> query, PaginatedRequest pagination)
         {
             if (string.IsNullOrWhiteSpace(pagination.SortColumn))
             {
                 return;
             }
 
-            if (pagination.SortDirection.ToUpper() == "DESC")
-            {
-                query = query.OrderByDescending(c => EF.Property<object>(c, pagination.SortColumn));
-            }
-            else
-            {
-                query = query.OrderBy(c => EF.Property<object>(c, pagination.SortColumn));
-            }
+            query = query.OrderBy($"{pagination.SortColumn} {pagination.SortDirection}");
         }
     }
 }

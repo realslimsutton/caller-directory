@@ -12,6 +12,8 @@ namespace CallerDirectory.Services
 
         public Task<IEnumerable<CallRecord>> GetRecipientRecordsAsync(PaginatedRequest pagination, long recipientId);
 
+        public Task<IEnumerable<object>> GetCallersCostAsync(PaginatedRequest pagination);
+
         public Task<IEnumerable<object>> GetHourlyCostsAsync();
     }
 }
