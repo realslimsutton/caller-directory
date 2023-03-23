@@ -113,7 +113,7 @@ namespace CallerDirectory.Controllers
             }
         }
 
-        [HttpGet("/hourly-costs")]
+        [HttpGet("/costs/hourly")]
         public async Task<IActionResult> GetHourlyCosts()
         {
             try

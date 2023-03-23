@@ -69,12 +69,14 @@ namespace CallerDirectory.Services
             return await this.ApplyRequestFiltersToQuery(query, request).ToListAsync();
         }
 
-        public async Task<IEnumerable<object>> GetHourlyCostsAsync()
+        public async Task<IEnumerable<object>> GetHourlyCostsAsync(Request request)
         {
             using CallingContext context = this.CreateContext();
 
             return await context.CallRecords
                 .GroupBy(c => c.StartDateTime.Hour)
+                .ApplyRequestFilters(request)
+                .ApplyRequestSorting(request)
                 .Select(c => new
                 {
                     c.Key,
